@@ -1,0 +1,23 @@
+### Eclipse ###
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+/.project
+
+### Java ###
+# Compiled class file
+*.class
+/.classpath
+
+########
+META-INF/
+
+
