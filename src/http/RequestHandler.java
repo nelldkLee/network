@@ -7,16 +7,28 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RequestHandler extends Thread {
-	private static final String DOCUMENT_ROOT = "./webapp";
+	private static String documentRoot = "";
 	private Map<String, String> errorMap = new HashMap<String, String>();
 	private static final String ERROR_MESSAGE_400 = "400 Bad Request";
 	private static final String ERROR_MESSAGE_404 = "404 File Not Found";
 
+	static {
+		try {
+			documentRoot = new File(RequestHandler.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
+			documentRoot += "/webapp";
+			System.out.println("--------->" + documentRoot);
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private Socket socket;
 
 	public RequestHandler(Socket socket) {
@@ -93,7 +105,7 @@ public class RequestHandler extends Thread {
 			url = "/index.html";
 		}
 
-		File file = new File(DOCUMENT_ROOT + url);
+		File file = new File(documentRoot + url);
 		if (file.exists() == false) {
 			responseError(os, protocol,"404");
 			return;
@@ -111,7 +123,7 @@ public class RequestHandler extends Thread {
 	//response404,400 메소드를 리팩토링.
 	private void responseError(OutputStream os, String protocol,String errorType) throws IOException {
 
-		File file = new File(DOCUMENT_ROOT + "/error/" + errorType + ".html");
+		File file = new File(documentRoot + "/error/" + errorType + ".html");
 		byte[] body = Files.readAllBytes(file.toPath());
 		String contentType = Files.probeContentType(file.toPath());
 
@@ -124,7 +136,7 @@ public class RequestHandler extends Thread {
 	 * responseError로 리팩토링
 	private void response404Error(OutputStream os, String protocol) throws IOException {
 
-		File file = new File(DOCUMENT_ROOT + "/error/404.html");
+		File file = new File(documentRoot + "/error/404.html");
 		byte[] body = Files.readAllBytes(file.toPath());
 		String contentType = Files.probeContentType(file.toPath());
 

@@ -1,9 +1,9 @@
 package chat;
 
-public class UDPTimeClient {
-
+public class ChatServer {
 
 	public static void main(String[] args) {
 		
 	}
+	
 }
